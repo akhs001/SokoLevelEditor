@@ -7,7 +7,6 @@ cell::cell(int posX, int posY , Vector2& size, std::string ID)
 {
 	m_canClick = true;
 	m_currentColor = -1;
-	m_myTile = -1;
 	m_pos.x = posX;
 	m_pos.y = posY;
 	m_image.SetImageDimension(1, 1, 128, 128);

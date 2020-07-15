@@ -189,11 +189,11 @@ bool MenuState::OnEnter()
 		//Maybe its better to put All buttons inside a vector Like i have the tiles , Players , Movables.
 		//But for now I leave it like this
 		m_btn[0] = new Button(10.0f, 0.0f,  Vector2{ 100,50 }, "Create", "BUTTON_1");
-		m_btn[1] = new Button(10.0f, 50.0f,  Vector2{ 50,50 }, "-",	   "BUTTON_1");
-		m_btn[2] = new Button(60.0f, 50.0f,  Vector2{ 50,50 }, "+",       "BUTTON_1");
-		m_btn[3] = new Button(10.0f, 100.0f,  Vector2{ 100,50 }, "Save",    "BUTTON_1");
-		m_btn[4] = new Button(10.0f, 150.0f,  Vector2{ 100,50 }, "Load",    "BUTTON_1");
-		m_btn[5] = new Button(10.0f, 200.0f,  Vector2{ 100,50 }, "Exit",    "BUTTON_1");
+		m_btn[1] = new Button(10.0f, 50.0f,  Vector2{ 50,50 }, "-",	     "BUTTON_1");
+		m_btn[2] = new Button(60.0f, 50.0f,  Vector2{ 50,50 }, "+",      "BUTTON_1");
+		m_btn[3] = new Button(10.0f, 100.0f,  Vector2{ 100,50 }, "Save", "BUTTON_1");
+		m_btn[4] = new Button(10.0f, 150.0f,  Vector2{ 100,50 }, "Load", "BUTTON_1");
+		m_btn[5] = new Button(10.0f, 200.0f,  Vector2{ 100,50 }, "Exit", "BUTTON_1");
 
 		//Pass a reference to MenuState Class to the buttons so they can interact
 		for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
@@ -220,11 +220,7 @@ bool MenuState::OnEnter()
 			ColorBtn[i] = new Button(60.0f * (i- max_x),height -100,  Vector2{ 50,50 }, "", id);
 			ColorBtn[i]->SetColor(i);
 		}
-
-
-
 	return true;
-
 }
 //------------------------------------------------------------------------------------------------------
 //function that waits for a key to be pressed before transitioning to a different state
@@ -442,6 +438,4 @@ void MenuState::LoadLevel()
 				}
 			}
 			file.close();
-
-
 }

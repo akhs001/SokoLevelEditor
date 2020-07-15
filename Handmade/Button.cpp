@@ -8,7 +8,7 @@ static bool isfONTLoaded = false;
 int currentBoardSize = 0;
 static bool isSoundLoaded = false;
 
-Button::Button(float x,float y , Vector2 size,  std::string text , std::string ID)
+Button::Button(float x,float y , Vector2 size, const std::string& text ,const std::string& ID)
 {
 	if (!isSoundLoaded)
 	{

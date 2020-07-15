@@ -10,7 +10,7 @@
 class Button : public GameObject
 {
 public :
-	Button(float x,float y ,Vector2 size,  std::string text ,  std::string ID);
+	Button(float x,float y ,Vector2 size, const std::string& text ,const  std::string& ID);
 	~Button();
 public:
 	virtual void Update(int deltaTime);

@@ -26,6 +26,8 @@ private :
 	int m_myTile;
 	bool m_canClick;
 	std::string m_ID;
+	Vector2 m_size;
+	Vector2 m_tempSize;
 	AABB m_collider;
 	Sprite m_image;
 	Vector2 m_pos;
