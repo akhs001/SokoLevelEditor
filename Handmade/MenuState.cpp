@@ -14,6 +14,7 @@
 static bool isButtonLoaded = false;
 static bool isStaffLoaded = false;
 
+
 MenuState::MenuState()
 {
 	m_bg = nullptr;
@@ -44,7 +45,6 @@ MenuState::MenuState()
 //Create a Blank Board
 void MenuState::CreateBoard(int width, int height)
 {
-	
 	isLevelLoaded = false;			//Level is not loaded but Created !I need to know that
 	m_allcells.clear();				//Clear the tiles Array (Just in case)
 
@@ -144,6 +144,7 @@ void MenuState::ExportLevel()
 
 bool MenuState::OnEnter()
 {
+
 	//Get tilesize from setting file
 	Utils::ReadTileSize(m_tileSize.x, m_tileSize.y);
 
@@ -153,13 +154,9 @@ bool MenuState::OnEnter()
 	//Load All staff here
 	if (!isStaffLoaded)
 	{
-		//Load Images
-		for (int i = 0; i < 33; i++)
-		{
-			std::string name = std::to_string(i) + ".png";
-			std::string filename = "Assets/mapImages/Decor_Tiles/" + name;
-			Sprite::Load(filename, std::to_string(i));
-		}
+		//Load the empty cell
+		Sprite::Load("Assets/mapImages/Decor_Tiles/0.png", std::to_string(0));
+
 		//load font resource into memory
 		Text::Load("Assets/Fonts/Quikhand.ttf", "Menu_Font", Text::FontSize::SMALL);
 		isStaffLoaded = true;
@@ -404,7 +401,6 @@ void MenuState::LoadLevel()
 
 	int NumCells = width * height;
 
-	int  loadedColor;
 	m_allcells.clear();
 
 		isLevelLoaded = true;
@@ -424,6 +420,7 @@ void MenuState::LoadLevel()
 					//check the Number of the cell
 					int cellNumber;
 					file.read((char*)&cellNumber, sizeof(int));
+
 					if (cellNumber == -1)
 					{
 						thecell = new cell(i * m_tileSize.x + middleX, j * m_tileSize.y+ middleY, m_tileSize, std::to_string(0));
