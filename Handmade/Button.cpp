@@ -4,11 +4,15 @@
 #include <iostream>
 #include "Utils.h"
 
+class MenuState;
+
 static bool isfONTLoaded = false;
 int currentBoardSize = 0;
 static bool isSoundLoaded = false;
 
-Button::Button(float x,float y , Vector2 size, const std::string& text ,const std::string& ID)
+Board board;
+
+Button::Button(Vector2 pos, Vector2 size, const std::string& text ,const std::string& ID)
 {
 	if (!isSoundLoaded)
 	{
@@ -19,73 +23,25 @@ Button::Button(float x,float y , Vector2 size, const std::string& text ,const st
 	m_state = nullptr;
 	m_canClick = true;
 	m_ID = ID;
-	if (!isfONTLoaded)
-	{
-		Text::Load("Assets/Fonts/Impact.ttf", "FONT", Text::FontSize::SMALL);
-		isfONTLoaded = true;
-	}
+
+	
 	//Position
-	m_pos.x = (int)x;
-	m_pos.y = (int)y;
+	m_pos = pos;
 	//Size
-	m_size = { size.x , size.y };
+	m_size = size;
 	//Image
-	m_image.SetSpriteDimension(m_size.x, m_size.y);
+	m_image.SetSpriteDimension(m_size.X, m_size.Y);
 	m_image.SetImageDimension(1,1,256 ,256);
 	m_image.SetImage(m_ID);
 	//Text
-	m_text.SetFont("FONT");
+	m_text.SetFont("Menu_Font");
 	m_text.SetColor(200, 100, 50);
-	m_text.SetSize(m_size.x/2, m_size.y/2);
+	m_text.SetSize(size.X /2 ,size.Y/2);
 	m_text.SetText(text);
 	//Collider
-	m_collider.SetDimension(m_size.x, m_size.y);
-	m_collider.SetPosition((int)x,(int)y);
+	m_collider.SetDimension(m_size.X, m_size.Y);
+	m_collider.SetPosition(pos.X ,pos.Y);
 
-#pragma region BoardSizes
-	//Set the board sizes
-	BoardSize size5{ 5,5 };
-	BoardSize size6{ 6,6 };
-	BoardSize size7{ 7,7 };
-	BoardSize size8{ 8,8 };
-	BoardSize size9{ 9,5 };
-	BoardSize size10{ 9,6 };
-	BoardSize size11{ 9,7 };
-	BoardSize size12{ 9,8 };
-	BoardSize size13{ 9,9 };
-	BoardSize size14{ 10,9 };
-	BoardSize size15{ 11,9 };
-	BoardSize size16{ 12,9 };
-	BoardSize size17{ 13,9 };
-	BoardSize size18{ 14,9 };
-	BoardSize size19{ 15,9 };
-	BoardSize size20{ 16,9 };
-	BoardSize size21{ 17,9 };
-	BoardSize size22{ 18,9 };
-	BoardSize size23{ 19,9 };
-	BoardSize size24{ 20,10 };
-
-	BoardSizes[0] = size5;
-	BoardSizes[1] = size6;
-	BoardSizes[2] = size7;
-	BoardSizes[3] = size8;
-	BoardSizes[4] = size9;
-	BoardSizes[5] = size10;
-	BoardSizes[6] = size11;
-	BoardSizes[7] = size12;
-	BoardSizes[8] = size13;
-	BoardSizes[9] = size14;
-	BoardSizes[10] = size15;
-	BoardSizes[11] = size16;
-	BoardSizes[12] = size17;
-	BoardSizes[13] = size18;
-	BoardSizes[14] = size19;
-	BoardSizes[15] = size20;
-	BoardSizes[16] = size21;
-	BoardSizes[17] = size22;
-	BoardSizes[18] = size23;
-	BoardSizes[19] = size24;
-#pragma endregion
 }
 
 Button::~Button()
@@ -101,7 +57,7 @@ void Button::Update(int deltaTime)
 		ctr += 0.1f ;
 	}
 
-	if (ctr > 2.0f)
+	if (ctr > 1.0f)
 	{
 		m_canClick = true;
 		ctr = 0.0f;
@@ -124,27 +80,28 @@ void Button::Update(int deltaTime)
 		//If we click Create
 		if (m_text.GetText() == "Create")
 		{
-			BoardSize size = BoardSizes[currentBoardSize];
-			m_state->CreateBoard(size.size_X, size.size_Y);
+			m_state->CreateBoard(m_state->GetCurrentSize().X, m_state->GetCurrentSize().Y);
 		}
 
 		if (m_text.GetText() == "-")
 		{
-			if (currentBoardSize > 0)
+			if (board.GetCurrentSize() > board.GetMin() )
 			{
-				currentBoardSize--;
-				BoardSize size = BoardSizes[currentBoardSize];
-				m_state->CreateBoard(size.size_X, size.size_Y);
+				int s = board.GetSmaller();
+				m_state->SetTileSize(board.GetTileSize());
+				m_state->CreateBoard(s, s);
 			
 			}
 		}
 		if (m_text.GetText() == "+")
 		{
-			if (currentBoardSize < 19)
+			if (board.GetCurrentSize() < board.GetMax())
 			{
-				currentBoardSize++;
-				BoardSize size = BoardSizes[currentBoardSize];
-				m_state->CreateBoard(size.size_X, size.size_Y);
+				int s = board.GetBigger();
+				//Get the tile size
+				m_state->SetTileSize( board.GetTileSize());
+
+				m_state->CreateBoard(s, s);
 			}
 		}
 		if (m_text.GetText() == "Save")
@@ -168,8 +125,8 @@ void Button::Update(int deltaTime)
 
 bool Button::Draw()
 {
-	m_image.Draw((int)m_pos.x,(int)m_pos.y);
-	m_text.Draw((int)m_pos.x + (int)m_size.x/4, (int)m_pos.y + (int)m_size.y/3);
+	m_image.Draw(m_pos.X , m_pos.Y);
+	m_text.Draw(m_pos.X + m_size.X /5, m_pos.Y + m_size.Y /3 );
 	return true;
 }
 

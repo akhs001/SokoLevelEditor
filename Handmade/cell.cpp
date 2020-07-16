@@ -7,12 +7,11 @@ cell::cell(int posX, int posY , Vector2& size, std::string ID)
 {
 	m_canClick = true;
 	m_currentColor = -1;
-	m_pos.x = posX;
-	m_pos.y = posY;
+	m_pos = Vector2(posX, posY);
 	m_image.SetImageDimension(1, 1, 128, 128);
-	m_image.SetSpriteDimension(size.x, size.y);
+	m_image.SetSpriteDimension(size.X, size.Y);
 	m_image.SetImage(ID);
-	m_collider.SetDimension(size.x, size.y);
+	m_collider.SetDimension(size.X, size.Y);
 	m_collider.SetPosition(posX, posY);
 }
 
@@ -58,7 +57,7 @@ void cell::Update(int deltaTime)
 
 bool cell::Draw()
 {
-	m_image.Draw(m_pos.x, m_pos.y);
+	m_image.Draw(m_pos.X, m_pos.Y);
 	return true;
 }
 

@@ -5,28 +5,33 @@
 #include "AABB.h"
 #include "MenuState.h"
 #include "Sound.h"
-
+#include "Board.h"
+#include "Vector2.h"
 
 class Button : public GameObject
 {
 public :
-	Button(float x,float y ,Vector2 size, const std::string& text ,const  std::string& ID);
+	Button(Vector2 pos, Vector2 size, const std::string& text ,const  std::string& ID);
 	~Button();
 public:
 	virtual void Update(int deltaTime);
 	virtual bool Draw();
+	//Set the Image of the button
+	void SetImage(std::string  ImageID);
+
+	bool CanClick();
+	void CanClick(bool flag);
+
+	void SetColor(int color);
+	int GetColor();
 
 	bool isClicked();
-	bool CanClick();
-	void SetColor(int color);
+
 	void SetMenuState(MenuState* state);
-	void CanClick(bool flag);
-	int GetColor();
-	Vector2 GetPos();
 	MenuState* GetState();
 
 	Vector2 GetSize();
-	void SetImage(std::string  ImageID);
+	Vector2 GetPos();
 
 private :
 	int m_color;
@@ -39,6 +44,6 @@ private :
 	AABB m_collider;
 	Vector2 m_pos;
 	MenuState* m_state;
-	BoardSize BoardSizes[18];
+
 };
 

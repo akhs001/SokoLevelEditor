@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Sprite.h"
 #include "AABB.h"
+#include "Vector2.h"
 
 class Grid;
 

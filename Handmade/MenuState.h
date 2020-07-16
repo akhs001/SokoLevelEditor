@@ -41,8 +41,8 @@
 #include <vector>
 #include <Windows.h>
 #include <fstream>
-#include <vector>
 #include "cell.h"
+
 
 const int NUMBER_OF_TILES = 33;
 const int NUMBER_OF_BUTTONS = 6;
@@ -52,22 +52,13 @@ const int MAX_HEIGHT = 10;
 
 class Button;
 
-struct BoardSize
-{
-	int size_X ;
-	int size_Y ;
-};
+
 
 
 
 class MenuState : public GameState
 {
-
 public:
-	enum class MenuOption { PLAY, QUIT };
-
-public:
-
 	MenuState();
 	virtual ~MenuState() {}
 
@@ -77,28 +68,30 @@ public:
 	virtual bool Draw();
 	virtual void OnExit();
 
-
 public:
 	void LoadLevel();
 	void CreateBoard(int x, int y);
-	bool ChooseSave();  //Save file Dialog
+	void EndGame();
 	void ExportLevel();
-	bool OpenLevel();	//File open Dialog
-	char* GetFileName() { return  Filename;  }
+
+	bool ChooseSave();  //Save file Dialog
 	bool isLevelLoaded;
-	void EndGame() { m_IsRunning = false; }
 	bool isLevelValid();
+	Vector2 GetCurrentSize() { return Vector2(m_currentWidth , m_currentHeight); }
+	bool OpenLevel();	//File open Dialog
+	void SetTileSize(int s) { m_tileSize.X = s; m_tileSize.Y = s; }
+	char* GetFileName();
 private:
-	Background* m_bg;
-	char Filename[MAX_PATH];
 	Button* m_btn[NUMBER_OF_BUTTONS];
 	Button* ColorBtn[NUMBER_OF_TILES];
 	std::vector<cell*> m_allcells;
+	Vector2 m_gridOffset;
+	Vector2 m_tileSize;
+	Background* m_bg;
 	int m_currentWidth;
 	int m_currentHeight;
 	bool m_IsRunning;
-	Vector2 m_tileSize;
-	Vector2 m_gridOffset;
+	char Filename[MAX_PATH];
 };
 
 #endif

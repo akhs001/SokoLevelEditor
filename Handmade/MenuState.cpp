@@ -10,18 +10,25 @@
 #include <fstream>
 #include "Utils.h"
 #include <stdlib.h>
+#include "Vector2.h"
 
-static bool isButtonLoaded = false;
 static bool isStaffLoaded = false;
 
 
 MenuState::MenuState()
 {
 	m_bg = nullptr;
+	//Starting with 5x5 board
 	m_currentWidth = 5;
 	m_currentHeight = 5;
+
+	//Level is not Loaded but Created
 	isLevelLoaded = false;
+
+	//If the Editor is running
 	m_IsRunning = true;
+
+	//Initialize the Tiles and Buttons
 	for (int i = 0; i < NUMBER_OF_TILES; i++)
 	{
 		std::size_t size = sizeof(Button);
@@ -34,7 +41,9 @@ MenuState::MenuState()
 		m_btn[i] = (Button*)malloc(size);
 		m_btn[i] = nullptr;
 	}
+	//The X and Y Offsets for the grid
 	m_gridOffset = { 25 , -50 };
+	//The Default tilesize;
 	m_tileSize = { 50,50 };
 }
 //------------------------------------------------------------------------------------------------------
@@ -54,8 +63,8 @@ void MenuState::CreateBoard(int width, int height)
 	int _width = Screen::Instance()->GetResolution().x;
 	int _height = Screen::Instance()->GetResolution().y;
 	//Find the Position that is centered to the screen
-	float middleX = _width * 0.5f -  (m_tileSize.x * width *0.5f) + m_gridOffset.x ;
-	float middleY = _height *0.5f -  (m_tileSize.y * height *0.5f) + m_gridOffset.y;
+	float middleX = _width * 0.5f -  (m_tileSize.X * width *0.5f) + m_gridOffset.X ;
+	float middleY = _height *0.5f -  (m_tileSize.Y * height *0.5f) + m_gridOffset.Y;
 
 	m_currentWidth = width;
 	m_currentHeight = height;
@@ -64,7 +73,7 @@ void MenuState::CreateBoard(int width, int height)
 		for (int x = 0; x < width; x++)
 		{
 			//Create a cell
-			cell* newCell = new cell(x * m_tileSize.x  +middleX , y * m_tileSize.y + middleY , m_tileSize ,std::to_string(0));
+			cell* newCell = new cell(x * m_tileSize.X  +middleX , y * m_tileSize.Y + middleY , m_tileSize ,std::to_string(0));
 			newCell->SetMyTile(-1);
 			newCell->SetCurrentColor(-1);
 			m_allcells.push_back(newCell);
@@ -96,7 +105,7 @@ bool MenuState::ChooseSave()
 
 		if (GetSaveFileName(&ofn))
 		{
-			std::cout << "You chose the file \"" << Filename << "\"\n";
+			//Save the level to the selected file
 			ExportLevel();
 
 			return true;
@@ -135,18 +144,21 @@ void MenuState::ExportLevel()
 		for (cell* c : m_allcells)
 		{
 			int color = c->GetCurrentColor();
+			if (color == 0) { color = -1; }
 			file.write((char*)(&color), sizeof(int));
 		}
-
 		file.close();
 }
  
 
 bool MenuState::OnEnter()
 {
-
 	//Get tilesize from setting file
-	Utils::ReadTileSize(m_tileSize.x, m_tileSize.y);
+	//If there is no tilesize in the file the default 50x50 is used
+	//!!You can change this But in the game always will be 50x50
+
+	Utils::ReadTileSize(m_tileSize.X, m_tileSize.Y);
+
 
 	//Create the background image
 	m_bg = new Background("Assets/mapImages/Blocks/bg.png");
@@ -154,34 +166,30 @@ bool MenuState::OnEnter()
 	//Load All staff here
 	if (!isStaffLoaded)
 	{
+		//Load the CLick sound
 		Sound::Load("Assets/Sounds/click.wav", "CLICK");
 		//Load the empty cell
 		Sprite::Load("Assets/mapImages/Decor_Tiles/0.png", std::to_string(0));
-
 		//load font resource into memory
+		Text::Load("Assets/Fonts/Impact.ttf", "FONT", Text::FontSize::SMALL);
 		Text::Load("Assets/Fonts/Quikhand.ttf", "Menu_Font", Text::FontSize::SMALL);
+		//Load the buttons
+		Sprite::Load("Assets/Button/button.png", "BUTTON_1");
+		Sprite::Load("Assets/Button/buttonover.png", "BUTTON_OVER");
+
+		//Load Images
+		for (int i = 0; i < NUMBER_OF_TILES; i++)
+		{
+			std::string name = std::to_string(i) + ".png";
+			std::string id = "TILE_" + std::to_string(i);
+			Sprite::Load("Assets/mapImages/Decor_Tiles/" + name, id);
+		}
 		isStaffLoaded = true;
 	}
-
-
 	//seed the random number generator
 	srand(static_cast<unsigned int>(time(0)));
 
-	//Load the buttons
-	if (!isButtonLoaded)
-	{
-		Sprite::Load("Assets/Button/button.png", "BUTTON_1");
-		Sprite::Load("Assets/Button/buttonover.png", "BUTTON_OVER");
-		isButtonLoaded = true;
-	}
 
-	//Load Images
-	for (int i = 0; i < NUMBER_OF_TILES; i++)
-	{
-		std::string name = std::to_string(i) + ".png";
-		std::string id = "TILE_" + std::to_string(i);
-		Sprite::Load("Assets/mapImages/Decor_Tiles/" + name, id);
-	}
 
 		//At start Create an Empty board 5x5
 		CreateBoard(m_currentWidth, m_currentHeight);
@@ -189,12 +197,12 @@ bool MenuState::OnEnter()
 		//Create the Buttons
 		//Maybe its better to put All buttons inside a vector Like i have the tiles , Players , Movables.
 		//But for now I leave it like this
-		m_btn[0] = new Button(10.0f, 0.0f,  Vector2{ 100,50 }, "Create", "BUTTON_1");
-		m_btn[1] = new Button(10.0f, 50.0f,  Vector2{ 50,50 }, "-",	     "BUTTON_1");
-		m_btn[2] = new Button(60.0f, 50.0f,  Vector2{ 50,50 }, "+",      "BUTTON_1");
-		m_btn[3] = new Button(10.0f, 100.0f,  Vector2{ 100,50 }, "Save", "BUTTON_1");
-		m_btn[4] = new Button(10.0f, 150.0f,  Vector2{ 100,50 }, "Load", "BUTTON_1");
-		m_btn[5] = new Button(10.0f, 200.0f,  Vector2{ 100,50 }, "Exit", "BUTTON_1");
+		m_btn[0] = new Button(Vector2(10,0) ,  Vector2( 100,50) , "Create", "BUTTON_1");
+		m_btn[1] = new Button(Vector2(10,50),Vector2(50,50) , "-",	     "BUTTON_1");
+		m_btn[2] = new Button( Vector2(60, 50),  Vector2(50, 50), "+",      "BUTTON_1");
+		m_btn[3] = new Button(Vector2(10, 100),  Vector2(100, 50), "Save", "BUTTON_1");
+		m_btn[4] = new Button(Vector2(10, 150),  Vector2(100, 50), "Load", "BUTTON_1");
+		m_btn[5] = new Button(Vector2(10, 200),  Vector2(100, 50), "Exit", "BUTTON_1");
 
 		//Pass a reference to MenuState Class to the buttons so they can interact
 		for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
@@ -206,19 +214,20 @@ bool MenuState::OnEnter()
 		int width = Screen::Instance()->GetResolution().x;
 		int height = Screen::Instance()->GetResolution().y;
 
+		//The maximum tiles that can be draw in x
 		int max_x = (width / 60);
 
-		//Create tiles
+		//Create tiles At the bottom of the screen
 		for (int i = 0; i < max_x ; i++)
 		{
 			std::string id = "TILE_" + std::to_string(i);
-			ColorBtn[i] = new Button(60.0f * i, height -50,  Vector2{ 50,50 }, "",id);
+			ColorBtn[i] = new Button(  Vector2(60 * i , height -50) ,  Vector2(50,50) , "",id);
 			ColorBtn[i]->SetColor(i);
 		}
 		for (int i = max_x; i < NUMBER_OF_TILES; i++)
 		{
 			std::string id = "TILE_" + std::to_string(i);
-			ColorBtn[i] = new Button(60.0f * (i- max_x),height -100,  Vector2{ 50,50 }, "", id);
+			ColorBtn[i] = new Button(Vector2( 60 * (i- max_x),height -100), Vector2(50, 50), "", id);
 			ColorBtn[i]->SetColor(i);
 		}
 	return true;
@@ -228,12 +237,13 @@ bool MenuState::OnEnter()
 //------------------------------------------------------------------------------------------------------
 GameState* MenuState::Update(int deltaTime)
 {
-	if (!m_IsRunning)	//End the game if Exit is pressed
+	//End the game if Exit is pressed
+	if (!m_IsRunning)
 	{
 		return nullptr;
 	}
 
-	//Tile Update
+	//Tiles Update
 	for (int i = 0; i < NUMBER_OF_TILES; i++)
 	{
 		if(ColorBtn[i] != nullptr)
@@ -250,7 +260,7 @@ GameState* MenuState::Update(int deltaTime)
 	}
 	isLevelLoaded = false;
 
-	//Tile selection And Apply "color"
+	//Select a color and Set it to all cells
 	for (int i = 0; i < NUMBER_OF_TILES; i++)
 	{
 		if (ColorBtn[i] && ColorBtn[i]->isClicked())
@@ -270,8 +280,8 @@ GameState* MenuState::Update(int deltaTime)
 		int mouseX = Input::Instance()->GetMousePosition().x;
 		int mouseY = Input::Instance()->GetMousePosition().y;
 		//Check if you click inside the button
-		if (mouseX > m_btn[i]->GetPos().x && mouseX < m_btn[i]->GetPos().x + m_btn[i]->GetSize().x
-		 && mouseY > m_btn[i]->GetPos().y && mouseY < m_btn[i]->GetPos().y + m_btn[i]->GetSize().y)
+		if (mouseX > m_btn[i]->GetPos().X && mouseX < m_btn[i]->GetPos().X + m_btn[i]->GetSize().X
+		 && mouseY > m_btn[i]->GetPos().Y && mouseY < m_btn[i]->GetPos().Y + m_btn[i]->GetSize().Y)
 		{
 			m_btn[i]->SetImage("BUTTON_OVER");	//Change the Image to mouseOver
 		}
@@ -290,20 +300,23 @@ GameState* MenuState::Update(int deltaTime)
 //------------------------------------------------------------------------------------------------------
 bool MenuState::Draw()
 {
+	//Draw the Background
 	m_bg->Draw();
-	//Draw Tiles
+
+	//Draw the Tile selectors
 	for (int i = 0; i < NUMBER_OF_TILES; i++)
 	{
 		if (ColorBtn[i] != nullptr)
 		ColorBtn[i]->Draw();
 	}
 
+	//Draw the board tiles
 	for (cell* c : m_allcells)
 	{
 		c->Draw();
 	}
 
-	//Draw Buttons
+	//Draw the Buttons
 	for (int i = 0; i < NUMBER_OF_BUTTONS; i++)
 	{
 		m_btn[i]->Draw();
@@ -318,12 +331,15 @@ bool MenuState::Draw()
 void MenuState::OnExit()
 {
 	delete m_bg;
-
 }
 
+/// <summary>
+/// Open a Level file
+/// </summary>
+/// <returns></returns>
 bool MenuState::OpenLevel()
 {
-	OPENFILENAME ofn = {};;
+	OPENFILENAME ofn = {};
 	ZeroMemory(&Filename, sizeof(Filename));
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
@@ -345,6 +361,16 @@ bool MenuState::OpenLevel()
 		std::cout << "You cancelled.\n";
 		return false;
 	}
+}
+
+char* MenuState::GetFileName()
+{
+	return Filename;
+}
+
+void MenuState::EndGame()
+{
+	m_IsRunning = false;
 }
 
 bool MenuState::isLevelValid()
@@ -371,15 +397,17 @@ bool MenuState::isLevelValid()
 		if (c->GetCurrentColor() == 32) { s_movable++; }
 	}
 
-	if (s_player1 == 1 && s_target1  > 0  && s_player2 ==1 && s_target2 >0 && s_movable > 0)
+	if (s_player1 == 1 && s_target1  == s_movable  && s_player2 <2 && s_movable > 0)
 	{
 		return true;
 	}
 	else
 		return false;
-
 }
 
+/// <summary>
+/// Load the level After file selection
+/// </summary>
 void MenuState::LoadLevel()
 {
 	std::ifstream file(Filename, std::ios_base::binary);
@@ -390,22 +418,23 @@ void MenuState::LoadLevel()
 	file.read((char*)(&width), sizeof(int));
 	file.read((char*)(&height), sizeof(int));
 
+	//Check if the level is valid
 	if (width < 5 || height < 5 || width > MAX_WIDTH || height > MAX_HEIGHT )
 	{
 		Utils::ShowMessage("An error found when loading the level.Maybe the leves is corrupted", "Error level");
 		return;
 	}
 
-	int NumCells = width * height;
+		int NumCells = width * height;
 
-	m_allcells.clear();
+		m_allcells.clear();
 
 		isLevelLoaded = true;
 		int c = 0;
 		int _width = Screen::Instance()->GetResolution().x;
 		int _height = Screen::Instance()->GetResolution().y;
-		float middleX = _width *0.5f -  (m_tileSize.x * width *0.5f)+m_gridOffset.x;
-		float middleY = _height * 0.5f - (m_tileSize.y * height * 0.5f) + m_gridOffset.y;
+		float middleX = _width *0.5f -  (m_tileSize.X * width *0.5f)+m_gridOffset.X;
+		float middleY = _height * 0.5f - (m_tileSize.Y * height * 0.5f) + m_gridOffset.Y;
 		m_currentWidth = width;
 		m_currentHeight = height;
 
@@ -417,21 +446,21 @@ void MenuState::LoadLevel()
 					//check the Number of the cell
 					int cellNumber;
 					file.read((char*)&cellNumber, sizeof(int));
-
+					// -1 is the empty cell
 					if (cellNumber == -1)
 					{
-						thecell = new cell(i * m_tileSize.x + middleX, j * m_tileSize.y+ middleY, m_tileSize, std::to_string(0));
+						thecell = new cell(i * m_tileSize.X + middleX, j * m_tileSize.Y+ middleY, m_tileSize, std::to_string(0));
 						thecell->SetMyTile(0);
 						thecell->SetCurrentColor(cellNumber);
 						m_allcells.push_back(thecell);
 					}
-					else
+					else    //Else get the cell Number and draw the correct tile
 					{
 						std::string name = std::to_string(cellNumber) + ".png";
 						std::string id = "TILE_" + std::to_string(cellNumber);
 						std::string filename = "Assets/mapImages/Decor_Tiles/" + name;
 
-						thecell = new cell(i * m_tileSize.x + middleX, j * m_tileSize.y + middleY, m_tileSize , std::to_string(cellNumber));
+						thecell = new cell(i * m_tileSize.X + middleX, j * m_tileSize.Y + middleY, m_tileSize , std::to_string(cellNumber));
 						thecell->SetCurrentColor(cellNumber);
 						thecell->SetMyTile(cellNumber);
 						m_allcells.push_back(thecell);

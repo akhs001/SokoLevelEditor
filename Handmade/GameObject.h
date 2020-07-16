@@ -39,11 +39,6 @@
 #include "Vector.h"
 
 
-struct Vector2
-{
-	int x;
-	int y;
-};
 
 
 class GameObject 
