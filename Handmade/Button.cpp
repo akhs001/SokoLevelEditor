@@ -35,7 +35,7 @@ Button::Button(float x,float y , Vector2 size, const std::string& text ,const st
 	m_image.SetImage(m_ID);
 	//Text
 	m_text.SetFont("FONT");
-	m_text.SetColor(100, 100, 50);
+	m_text.SetColor(200, 100, 50);
 	m_text.SetSize(m_size.x/2, m_size.y/2);
 	m_text.SetText(text);
 	//Collider

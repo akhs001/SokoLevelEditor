@@ -154,6 +154,7 @@ bool MenuState::OnEnter()
 	//Load All staff here
 	if (!isStaffLoaded)
 	{
+		Sound::Load("Assets/Sounds/click.wav", "CLICK");
 		//Load the empty cell
 		Sprite::Load("Assets/mapImages/Decor_Tiles/0.png", std::to_string(0));
 
