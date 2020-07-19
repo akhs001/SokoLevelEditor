@@ -23,7 +23,7 @@ int Board::GetSmaller()
 int Board::GetTileSize()
 {
 	int screenX = Screen::Instance()->GetResolution().y;
-
+	//Fit the Bord in the screen
 	int tileS = (screenX -100) / currentSize;
 
 	return  tileS;

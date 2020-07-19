@@ -44,17 +44,12 @@
 #include "cell.h"
 
 
-const int NUMBER_OF_TILES = 33;
+const int NUMBER_OF_TILES = 45;
 const int NUMBER_OF_BUTTONS = 6;
 const int MAX_WIDTH = 20;
 const int MAX_HEIGHT = 10;
 
-
 class Button;
-
-
-
-
 
 class MenuState : public GameState
 {

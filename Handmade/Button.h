@@ -29,7 +29,8 @@ public:
 
 	void SetMenuState(MenuState* state);
 	MenuState* GetState();
-
+	void OnHover();
+	void OnNoHover();
 	Vector2 GetSize();
 	Vector2 GetPos();
 

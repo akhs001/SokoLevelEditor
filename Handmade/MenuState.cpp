@@ -174,8 +174,8 @@ bool MenuState::OnEnter()
 		Text::Load("Assets/Fonts/Impact.ttf", "FONT", Text::FontSize::SMALL);
 		Text::Load("Assets/Fonts/Quikhand.ttf", "Menu_Font", Text::FontSize::SMALL);
 		//Load the buttons
-		Sprite::Load("Assets/Button/button.png", "BUTTON_1");
-		Sprite::Load("Assets/Button/buttonover.png", "BUTTON_OVER");
+		Sprite::Load("Assets/Button/5.png", "BUTTON_1");
+		//Sprite::Load("Assets/Button/buttonover.png", "BUTTON_OVER");
 
 		//Load Images
 		for (int i = 0; i < NUMBER_OF_TILES; i++)
@@ -190,15 +190,11 @@ bool MenuState::OnEnter()
 	srand(static_cast<unsigned int>(time(0)));
 
 
-
-		//At start Create an Empty board 5x5
-		CreateBoard(m_currentWidth, m_currentHeight);
-
 		//Create the Buttons
 		//Maybe its better to put All buttons inside a vector Like i have the tiles , Players , Movables.
 		//But for now I leave it like this
 		m_btn[0] = new Button(Vector2(10,0) ,  Vector2( 100,50) , "Create", "BUTTON_1");
-		m_btn[1] = new Button(Vector2(10,50),Vector2(50,50) , "-",	     "BUTTON_1");
+		m_btn[1] = new Button(Vector2(10,50),Vector2(50,50) , "-",	        "BUTTON_1");
 		m_btn[2] = new Button( Vector2(60, 50),  Vector2(50, 50), "+",      "BUTTON_1");
 		m_btn[3] = new Button(Vector2(10, 100),  Vector2(100, 50), "Save", "BUTTON_1");
 		m_btn[4] = new Button(Vector2(10, 150),  Vector2(100, 50), "Load", "BUTTON_1");
@@ -283,11 +279,11 @@ GameState* MenuState::Update(int deltaTime)
 		if (mouseX > m_btn[i]->GetPos().X && mouseX < m_btn[i]->GetPos().X + m_btn[i]->GetSize().X
 		 && mouseY > m_btn[i]->GetPos().Y && mouseY < m_btn[i]->GetPos().Y + m_btn[i]->GetSize().Y)
 		{
-			m_btn[i]->SetImage("BUTTON_OVER");	//Change the Image to mouseOver
+			m_btn[i]->OnHover();
 		}
 		else
 		{
-			m_btn[i]->SetImage("BUTTON_1");	//Else the normal
+			m_btn[i]->OnNoHover();
 		}
 
 		m_btn[i]->Update(1);

@@ -35,7 +35,7 @@ Button::Button(Vector2 pos, Vector2 size, const std::string& text ,const std::st
 	m_image.SetImage(m_ID);
 	//Text
 	m_text.SetFont("Menu_Font");
-	m_text.SetColor(200, 100, 50);
+	m_text.SetColor(0, 0, 0);
 	m_text.SetSize(size.X /2 ,size.Y/2);
 	m_text.SetText(text);
 	//Collider
@@ -80,7 +80,9 @@ void Button::Update(int deltaTime)
 		//If we click Create
 		if (m_text.GetText() == "Create")
 		{
-			m_state->CreateBoard(m_state->GetCurrentSize().X, m_state->GetCurrentSize().Y);
+			int s = board.GetCurrentSize();
+			m_state->SetTileSize(board.GetTileSize());
+			m_state->CreateBoard(s, s);
 		}
 
 		if (m_text.GetText() == "-")
@@ -126,7 +128,7 @@ void Button::Update(int deltaTime)
 bool Button::Draw()
 {
 	m_image.Draw(m_pos.X , m_pos.Y);
-	m_text.Draw(m_pos.X + m_size.X /5, m_pos.Y + m_size.Y /3 );
+	m_text.Draw(m_pos.X + m_size.X /5, m_pos.Y + m_size.Y /4 );
 	return true;
 }
 
@@ -179,6 +181,16 @@ Vector2 Button::GetPos()
 MenuState* Button::GetState()
 {
 	return m_state;
+}
+
+void Button::OnHover()
+{
+	m_text.SetColor(100, 50, 50);
+}
+
+void Button::OnNoHover()
+{
+	m_text.SetColor(0, 0, 0);
 }
 
 Vector2 Button::GetSize()
