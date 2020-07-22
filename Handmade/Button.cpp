@@ -6,8 +6,7 @@
 
 class MenuState;
 
-static bool isfONTLoaded = false;
-int currentBoardSize = 0;
+static bool isFontLoaded = false;
 static bool isSoundLoaded = false;
 
 Board board;
@@ -20,27 +19,27 @@ Button::Button(Vector2 pos, Vector2 size, const std::string& text ,const std::st
 		isSoundLoaded = true;
 	}
 	m_click.SetSound("CLICK");
+	m_click.SetVolume(15);
 	m_state = nullptr;
 	m_canClick = true;
 	m_ID = ID;
 
-	
 	//Position
 	m_pos = pos;
 	//Size
 	m_size = size;
 	//Image
-	m_image.SetSpriteDimension(m_size.X, m_size.Y);
+	m_image.SetSpriteDimension(m_size.x, m_size.y);
 	m_image.SetImageDimension(1,1,256 ,256);
 	m_image.SetImage(m_ID);
 	//Text
 	m_text.SetFont("Menu_Font");
 	m_text.SetColor(0, 0, 0);
-	m_text.SetSize(size.X /2 ,size.Y/2);
+	m_text.SetSize(size.x /2 ,size.y/2);
 	m_text.SetText(text);
 	//Collider
-	m_collider.SetDimension(m_size.X, m_size.Y);
-	m_collider.SetPosition(pos.X ,pos.Y);
+	m_collider.SetDimension(m_size.x, m_size.y);
+	m_collider.SetPosition(pos.x ,pos.y);
 
 }
 
@@ -71,72 +70,25 @@ void Button::Update(int deltaTime)
 	{
 		m_click.Play();
 		m_canClick = false;
-		//If we click exit
-		if (m_text.GetText() == "Exit")
-		{
-			m_state->EndGame();
-			return;
-		}
-		//If we click Create
-		if (m_text.GetText() == "Create")
-		{
-			int s = board.GetCurrentSize();
-			m_state->SetTileSize(board.GetTileSize());
-			m_state->CreateBoard(s, s);
-		}
-
-		if (m_text.GetText() == "-")
-		{
-			if (board.GetCurrentSize() > board.GetMin() )
-			{
-				int s = board.GetSmaller();
-				m_state->SetTileSize(board.GetTileSize());
-				m_state->CreateBoard(s, s);
-			
-			}
-		}
-		if (m_text.GetText() == "+")
-		{
-			if (board.GetCurrentSize() < board.GetMax())
-			{
-				int s = board.GetBigger();
-				//Get the tile size
-				m_state->SetTileSize( board.GetTileSize());
-
-				m_state->CreateBoard(s, s);
-			}
-		}
-		if (m_text.GetText() == "Save")
-		{
-			m_state->ChooseSave();
-		}
-		if (m_text.GetText() == "Load")
-		{
-			if (!m_state->OpenLevel())
-			{
-				MessageBox(0, "Wrong LevelFile", "Wrong Level", MB_OK);
-			}
-			else
-			{
-				m_state->LoadLevel();
-				std::cout << "Level Loaded " << std::endl;
-			}
-		}
+		handler.click(m_text.GetText(), this);
 	}
 }
 
 bool Button::Draw()
 {
-	m_image.Draw(m_pos.X , m_pos.Y);
-	m_text.Draw(m_pos.X + m_size.X /5, m_pos.Y + m_size.Y /4 );
+	m_image.Draw(m_pos.x , m_pos.y);
+	m_text.Draw(m_pos.x + m_size.x /5, m_pos.y + m_size.y /4 );
 	return true;
 }
 
+/// <summary>
+/// Check if the button is clicked by the mouse
+/// </summary>
+/// <returns></returns>
 bool Button::isClicked()
 {
 	if (Input::Instance()->IsMouseClicked())
 	{
-	
 		//Check if the click is on pthe button
 		int xp = Input::Instance()->GetMousePosition().x;
 		int yp = Input::Instance()->GetMousePosition().y;
@@ -153,6 +105,11 @@ bool Button::CanClick()
 	return m_canClick;
 }
 
+void Button::CanClick(bool flag)
+{
+	m_canClick = flag;
+}
+
 void Button::SetColor(int color)
 {
 	m_color = color;
@@ -163,10 +120,6 @@ void Button::SetMenuState(MenuState* state)
 	m_state = state;
 }
 
-void Button::CanClick(bool flag)
-{
-	m_canClick = flag;
-}
 
 int Button::GetColor()
 {

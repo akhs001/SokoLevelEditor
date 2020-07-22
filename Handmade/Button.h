@@ -7,6 +7,7 @@
 #include "Sound.h"
 #include "Board.h"
 #include "Vector2.h"
+#include "ClickHandler.h"
 
 class Button : public GameObject
 {
@@ -45,6 +46,6 @@ private :
 	AABB m_collider;
 	Vector2 m_pos;
 	MenuState* m_state;
-
+	ClickHandler handler;
 };
 

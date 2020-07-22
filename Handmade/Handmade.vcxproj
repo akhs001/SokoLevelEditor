@@ -143,6 +143,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="cell.h" />
+    <ClInclude Include="ClickHandler.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="Game.h" />
@@ -160,7 +161,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector.h" />
-    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="cell.cpp" />
+    <ClCompile Include="ClickHandler.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EndState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -184,7 +186,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

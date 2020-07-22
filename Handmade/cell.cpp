@@ -5,17 +5,16 @@
 
 cell::cell(int posX, int posY , Vector2& size, std::string ID)
 {
+	m_myTile = -1;
 	m_canClick = true;
 	m_currentColor = -1;
-	m_pos = Vector2(posX, posY);
+	m_pos = Vector2({ posX, posY });
 	m_image.SetImageDimension(1, 1, 128, 128);
-	m_image.SetSpriteDimension(size.X, size.Y);
+	m_image.SetSpriteDimension(size.x, size.y);
 	m_image.SetImage(ID);
-	m_collider.SetDimension(size.X, size.Y);
+	m_collider.SetDimension(size.x, size.y);
 	m_collider.SetPosition(posX, posY);
 }
-
-
 
 cell::~cell()
 {
@@ -39,8 +38,6 @@ void cell::Update(int deltaTime)
 
 		if (!m_canClick) { return; }
 
-
-
 	if (isClicked())
 	{
 		m_canClick = false;
@@ -49,15 +46,11 @@ void cell::Update(int deltaTime)
 			m_image.SetImage(tile);
 			m_currentColor = m_myTile;
 	}
-
-	
-
-	
 }
 
 bool cell::Draw()
 {
-	m_image.Draw(m_pos.X, m_pos.Y);
+	m_image.Draw(m_pos.x, m_pos.y);
 	return true;
 }
 
@@ -90,6 +83,26 @@ int cell::GetMyTile()
 	return m_myTile;
 }
 
+int cell::GetCurrentColor()
+{
+	return m_currentColor;
+}
+
+void cell::SetPos(Vector2 newpos)
+{
+	m_pos = newpos;
+}
+
+void cell::SetCurrentColor(int color)
+{
+	m_currentColor = color;
+}
+
+Vector2 cell::GetPos()
+{
+	return m_pos;
+}
+
 Sprite cell::GetImage()
 {
 	return m_image;
@@ -98,6 +111,7 @@ Sprite cell::GetImage()
 /// <summary>
 /// Fuction to execute when a level is loaded
 ///What this function does is to set every Tile to the correct tile from the file
+///This function is responsible so every tile is change to the correct tile after the level loading
 /// </summary>
 void cell::SetFromLoad()
 {
