@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "Game.h"
 #include "MenuState.h"
-#include "EndState.h"
 #include <iostream>
 #include "Button.h"
 #include "Screen.h"
@@ -115,7 +114,8 @@ bool MenuState::ChooseSave()
 	}
 	else
 	{
-		Utils::ShowMessage("The level is not Valid.Be sure to add at least one Player ,targets and at least one movable", "Error Level");
+		Utils::ShowMessage("The level is not Valid.\n For single Player: RED Player + RED flags + balls(same number as flags) \n"
+						   "For Multiplayer : BOTH PLAYERS + BALLS + FLAGS(Number Bigger or equal than balls)", "Error Level");
 		return false;
 	}
 }
@@ -401,11 +401,22 @@ bool MenuState::isLevelValid()
 		if (c->GetCurrentColor() == 32) { s_movable++; }
 	}
 
-	if (s_player1 == 1 && s_target1  == s_movable  && s_player2 <2 && s_movable > 0)
+	if (s_player1 == 1 && s_player2 == 1)		//If its multiplayer
 	{
-		return true;
+		if (s_target1 >= s_movable && s_target2 >= s_movable && s_movable > 0)
+		{
+			return true;
+		}
 	}
-	else
+	else										//SinglePlayer
+	{
+		if (s_player1 == 1 && s_target1 == s_movable && s_player2 < 2 && s_movable > 0)
+		{
+			return true;
+		}
+	}
+
+
 		return false;
 }
 

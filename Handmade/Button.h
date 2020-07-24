@@ -29,23 +29,29 @@ public:
 	bool isClicked();
 
 	void SetMenuState(MenuState* state);
-	MenuState* GetState();
-	void OnHover();
 	void OnNoHover();
+	void OnHover();
+	MenuState* GetState();
 	Vector2 GetSize();
 	Vector2 GetPos();
 
 private :
 	int m_color;
 	bool m_canClick;
+
 	Sound m_click;
+
 	std::string m_ID;
-	Text m_text;
 	Sprite m_image;
+	Text m_text;
+
 	Vector2 m_size;
-	AABB m_collider;
 	Vector2 m_pos;
+
+	AABB m_collider;
+
 	MenuState* m_state;
-	ClickHandler handler;
+
+	ClickHandler handler;		//Check What Button is pressed
 };
 

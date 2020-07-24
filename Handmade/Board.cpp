@@ -3,7 +3,6 @@
 
 Board::Board()
 {
-	//m_currentSize = 5;
 }
 
 /// <summary>

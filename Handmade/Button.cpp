@@ -7,17 +7,11 @@
 class MenuState;
 
 static bool isFontLoaded = false;
-static bool isSoundLoaded = false;
 
 Board board;
 
 Button::Button(Vector2 pos, Vector2 size, const std::string& text ,const std::string& ID)
 {
-	if (!isSoundLoaded)
-	{
-		Sound::Load("Assets/Sounds/click.wav", "CLICK");
-		isSoundLoaded = true;
-	}
 	m_click.SetSound("CLICK");
 	m_click.SetVolume(15);
 	m_state = nullptr;

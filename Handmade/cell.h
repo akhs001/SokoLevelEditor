@@ -16,23 +16,24 @@ public:
 
 	virtual void Update(int deltaTime) ;
 	virtual bool Draw();
-	void SetFromLoad();
-	void SetMyTile(int number);
 	void SetCurrentColor(int color);
+	void SetPos(Vector2 newpos);
+	void SetMyTile(int number);
+	void SetFromLoad();
 	bool isClicked();
 	int GetMyTile();
 	int GetCurrentColor();
-	void SetPos(Vector2 newpos);
 	Vector2 GetPos();
 	Sprite GetImage();
 private :
 	bool m_canClick;
-	int m_myTile;
 	int m_currentColor;
+	int m_myTile;
+
 	std::string m_ID;
+
 	Vector2 m_pos;
-	Vector2 m_size;
-	Vector2 m_tempSize;
+
 	AABB m_collider;
 	Sprite m_image;
 };

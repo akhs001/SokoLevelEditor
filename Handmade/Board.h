@@ -1,7 +1,7 @@
 #pragma once
 
-const int MIN_SIZE = 5;
-const int MAX_SIZE = 50;
+const int MIN_SIZE = 5;		//Minimun 5x5
+const int MAX_SIZE = 50;	//Maximum 50x50
 
 static 	int m_currentSize = 5;
 
